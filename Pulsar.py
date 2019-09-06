@@ -6,6 +6,7 @@ from keras import models
 from keras import layers
 import matplotlib.pyplot as plt
 import seaborn as sns
+import itertools
 
 # Data Import
 dataset = pd.read_csv('/Users/Prakash/Downloads/pulsar_stars.csv')
@@ -28,6 +29,18 @@ sns.heatmap(corr, annot=True)
 plt.title('Correlation between variables')
 
 # Pair-plot to show relationships between variables
-plt.figure(figsize=(20, 20))
+plt.figure(figsize=(10, 10))
 sns.pairplot(dataset, hue='target')
 plt.show()
+
+# Boxplot
+columns = [x for x in dataset.columns if x not in 'target']
+length = len(columns)
+plt.figure(figsize=(15, 15))
+
+for i, j in itertools.zip_longest(columns, range(length)):
+    plt.subplot(4, 2, j+1)
+    sns.lvplot(x=dataset['target'], y=dataset[i])
+    plt.title(i)
+    plt.axhline(dataset[i].mean(), linestyle='dashed')
+
