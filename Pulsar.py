@@ -7,6 +7,8 @@ from keras import layers
 import matplotlib.pyplot as plt
 import seaborn as sns
 import itertools
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
 
 # Data Import
 dataset = pd.read_csv('/Users/Prakash/Downloads/pulsar_stars.csv')
@@ -42,5 +44,31 @@ for i, j in itertools.zip_longest(columns, range(length)):
     plt.subplot(4, 2, j+1)
     sns.lvplot(x=dataset['target'], y=dataset[i])
     plt.title(i)
-    plt.axhline(dataset[i].mean(), linestyle='dashed')
+    plt.axhline(dataset[i].mean(), linestyle='dashed')  #
+
+# Violinplot
+columns = [x for x in dataset.columns if x not in 'target']
+length = len(columns)
+
+for i, j in itertools.zip_longest(columns, range(length)):
+    plt.subplot(4, 2, j+1)
+    sns.violinplot(x=dataset['target'], y=dataset[i])
+    plt.title(i)
+
+
+# Train-Test Split
+X = dataset.drop(columns='target')
+Y = dataset['target'].values
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, stratify=Y)
+
+
+# Predictions using KNN
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train, Y_train)
+
+
+
+
+
+
 
